@@ -1,0 +1,10 @@
+.login {
+    vertical-align: middle;
+    width: 40%;
+    height: 20%;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform:translate(70%,-100%)
+}
