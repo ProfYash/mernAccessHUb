@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const uuid = require('uuid')
 const axios = require('axios')
 const app = express();
+const { MyDataBase } = require('./repository/databse.js')
 app.use(cors())
 app.use(bodyParser.json())
 app.use(cookieParser())
@@ -16,8 +17,31 @@ const adminStack = new Stack("Reactjs", "nodejs", "MongoDb")
 const adminCred = new Credentials("yash123", "$2b$10$wc.wxLlpEpciU0JB9QSh.uJmf7GLIxi/fM7ruPHRX6NsvlypKNQEO")
 const adminUser = new User("Yash Shah", "admin", adminStack, 10, "India", adminCred)
 allUsers.push(adminUser)
-console.log(allUsers)
+// console.log(allUsers)
 const allQuestions = []
+app.post('/api/v1/postuserdb', async (req, resp) => {
+    console.log("inside postuserdb")
+    const fullName = req.body.fullname;
+    const role = req.body.role;
+    const exprieance = req.body.exprieance;
+    const country = req.body.country;
+    const frontend = req.body.frontend;
+    const backend = req.body.backend;
+    const db = req.body.db;
+    const username = req.body.username
+    const password = req.body.password
+    let credentials = new Credentials(username, password)
+    credentials.password = await credentials.getHashOfPassword()
+    let stackofNewUser = new Stack(frontend, backend, db)
+    let newUser = new User(fullName, role, stackofNewUser, exprieance, country, credentials)
+    // console.log(newUser)
+    console.log("iUserCreated in postuserdb")
+    const mydb = await new MyDataBase()
+    console.log("mydb created",mydb)
+    const newQuery = await mydb.createNewUser(newUser)
+    console.log("newQuery created")
+    resp.status(200).send(newQuery)
+})
 app.post('/api/v1/createuser', async (req, resp) => {
     console.log("inside Create User")
     if (!JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid) {
