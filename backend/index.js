@@ -80,9 +80,10 @@ app.post('/api/v1/createquestion', async (req, resp) => {
     const options = req.body.options
     const correctAnswer = req.body.correctAnswer
     const complexity = req.body.complexity
-    let newQuestion = new Question(type, tech, details, options, correctAnswer)
+    let newQuestion = new Question(type, tech, details, options, correctAnswer,complexity)
     allQuestions.push(newQuestion)
     resp.status(200).send(newQuestion)
+    console.log(newQuestion)
 })
 app.get('/api/v1/getallquestions', (req, resp) => {
     if (JWTToken.isValidateToken(req, resp, req.cookies["token"]).role == "admin") {

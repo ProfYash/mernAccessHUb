@@ -32,9 +32,10 @@ function CreateUser() {
                     updateloginStatus("UserAlreadyExist")
                     return
                 }
-                updateloginStatus("User Created")
+                
             })
-
+            updateloginStatus("User Created")
+            alert("User Created!")
         }
     }
 

@@ -4,8 +4,11 @@ import img from '../../logoswabhav.png'
 function Navigation({ username, role }) {
 
     if (role == "admin") {
-        const displayPath="/AllUser/"+username
+        const displayuserPath="/AllUser/"+username
         const createUserPath="/CreateUser/"+username
+        const createQuestionPath="/CreateQuestion/"+username
+        const displayquestionPath="/AllQuestions/"+username
+       
         return (
 
             <Navbar collapseOnSelect expand="lg" bg="warning" variant="light">
@@ -20,12 +23,12 @@ function Navigation({ username, role }) {
                             <NavDropdown title="Users" id="collasible-nav-dropdown">
                                 <NavDropdown.Item href={createUserPath}>Create</NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item href={displayPath}>Display</NavDropdown.Item>
+                                <NavDropdown.Item href={displayuserPath}>Display</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Questions" id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Create</NavDropdown.Item>
+                                <NavDropdown.Item href={createQuestionPath}>Create</NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.2">Display</NavDropdown.Item>
+                                <NavDropdown.Item href={displayquestionPath}>Display</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
                        
@@ -34,6 +37,7 @@ function Navigation({ username, role }) {
             </Navbar>
         )
     } else {
+        const giveTestPath="/Test/"+username
         return (
 
             <Navbar collapseOnSelect expand="lg" bg="warning" variant="light">
@@ -44,7 +48,7 @@ function Navigation({ username, role }) {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="#features">Give Test</Nav.Link>
+                            <Nav.Link href={giveTestPath}>Give Test</Nav.Link>
                         </Nav>
                        
                     </Navbar.Collapse>

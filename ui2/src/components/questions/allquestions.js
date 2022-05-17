@@ -3,15 +3,15 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie'
 import Navigation from "../navigation/navigation";
-function AllUsers() {
+function AllQuestions() {
     const role = "admin"
     const user = useParams().username
-    const [allUsers, updateallUsers] = useState({})
+    const [allQuestions, updateallQuestions] = useState({})
     const [loginStatus, updateloginStatus] = useState("")
     let navigate = useNavigate();
-    const loadUsers = async (e) => {
+    const loadQuestions = async (e) => {
 
-        let resp = await axios.get("http://localhost:8888/api/v1/getallusers").catch(e => {
+        let resp = await axios.get("http://localhost:8888/api/v1/getallquestions").catch(e => {
             console.log(e.message)
             if (e.response.status == 401) {
                 updateloginStatus("Unauthorized")
@@ -19,37 +19,41 @@ function AllUsers() {
             }
         })
         if (resp.data != null) {
-            console.log(resp.data)
-            updateallUsers(resp.data)
+            // console.log(resp.data)
+            updateallQuestions(resp.data)
         }
     }
     useEffect(() => {
-        loadUsers();
+        loadQuestions();
     }, [])
-    let cardofuser
-    if (allUsers != null) {
-        console.log(allUsers)
-        console.log("generating Cards")
-        cardofuser = Object.values(allUsers).map(u => {
-            { console.log(u) }
+    let cardofQuestion
+    if (allQuestions != null) {
+        // console.log(allQuestions)
+        // console.log("generating Cards")
+        cardofQuestion = Object.values(allQuestions).map(u => {
+            // console.log(u) 
+            
             return (
                 <div className="card" style={{ width: "50%", marginBottom: "50px" }}>
                     <div className="card-header" style={{ backgroundColor: "orange" }}>
-                       Username: &nbsp; {u.credentials.username}
+                        Question Id:&nbsp;{u.id}
                     </div>
                     <div className="card-body" key={u.id}>
-                        
-                        Full Name: &nbsp;{u.fname}&nbsp;{u.lname}<br />
-                        Country: &nbsp;{u.country}<br />
-                        Frontend:&nbsp;{u.stack.frontend}<br />
-                        Backend:&nbsp;{u.stack.backend}<br />
-                        DataBase:&nbsp;{u.stack.db}<br />
+                        Type: &nbsp;{u.type}<br />
+                        Tech:&nbsp;{u.tech}<br />
+                        Details:&nbsp;{u.details}<br />
+                        Option A:&nbsp;{u.options[0]}<br />
+                        Option B:&nbsp;{u.options[1]}<br />
+                        Option C:&nbsp;{u.options[2]}<br />
+                        Option D:&nbsp;{u.options[3]}<br />
+                        Correct Answer:&nbsp;{u.correctAnswer}<br />
+                        Complexity:&nbsp;{u.complexity}<br />
 
                     </div>
                 </div>)
         })
     }
-    console.log(cardofuser)
+    // console.log(cardofQuestion)
     if (loginStatus == "Unauthorized") {
         return (
             <div className="d-flex felx-row flex-wrap justify-content-between">
@@ -64,9 +68,9 @@ function AllUsers() {
                 <Navigation username={user} role={role} />
             </div>
             <div className="d-flex felx-row flex-wrap justify-content-between">
-                {cardofuser}
+                {cardofQuestion}
             </div>
         </div>
     )
 }
-export default AllUsers
+export default AllQuestions
