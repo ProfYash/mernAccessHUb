@@ -1,6 +1,7 @@
 const JWTToken = require('./middleware/authentication.js')
 const { User, Credentials, Stack } = require('./model/user.js')
 const { Question, nounsBasedonCountry } = require('./model/question.js')
+const { Test } = require('./model/test.js')
 const cookieParser = require('cookie-parser')
 const express = require('express')
 const cors = require('cors')
@@ -18,6 +19,8 @@ const adminUser = new User("Yash Shah", "admin", adminStack, 10, "India", adminC
 allUsers.push(adminUser)
 console.log(allUsers)
 const allQuestions = []
+const allTest = []
+allTest.push(new Test("Node"),new Test("React"),new Test("Mongo"))
 app.post('/api/v1/createuser', async (req, resp) => {
     console.log("inside Create User")
     if (!JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid) {
@@ -42,17 +45,17 @@ app.post('/api/v1/createuser', async (req, resp) => {
             }
 
         }
-
-
-        if (usernameExists == true) {
+       if (usernameExists == true) {
             resp.status(405).send("Username Already Exist")
         } else {
+
             let credentials = new Credentials(username, password)
             credentials.password = await credentials.getHashOfPassword()
             let stackofNewUser = new Stack(frontend, backend, db)
-            let newUser = new User(fullName, role, stackofNewUser, exprieance, country, credentials)
+            let tests = gettests(stackofNewUser, allTest)
+            let newUser = new User(fullName, role, stackofNewUser, exprieance, country, credentials, tests)
             allUsers.push(newUser)
-            console.log("iUserCreated")
+            console.log("iUserCreated",newUser)
             resp.status(200).send(newUser)
         }
     }
@@ -80,10 +83,19 @@ app.post('/api/v1/createquestion', async (req, resp) => {
     const options = req.body.options
     const correctAnswer = req.body.correctAnswer
     const complexity = req.body.complexity
-    let newQuestion = new Question(type, tech, details, options, correctAnswer,complexity)
+    let newQuestion = new Question(type, tech, details, options, correctAnswer, complexity)
+    for (let index = 0; index < allTest.length; index++) {
+        if (tech == allTest[index].tech) {
+            allTest[index].insertQuestiontoTest(newQuestion)
+            console.log(allTest[index])
+            break
+        }
+
+    }
+
     allQuestions.push(newQuestion)
     resp.status(200).send(newQuestion)
-    console.log(newQuestion)
+    // console.log(newQuestion)
 })
 app.get('/api/v1/getallquestions', (req, resp) => {
     if (JWTToken.isValidateToken(req, resp, req.cookies["token"]).role == "admin") {
@@ -141,6 +153,46 @@ app.get('/api/v1/fetchquestion/:username', (req, resp) => {
 
 
 })
+app.get('/api/v1/getTests',(req,resp)=>{
+    let tokenPayload=JWTToken.isValidateToken(req, resp, req.cookies["token"])
+    if (tokenPayload.role != "user") {
+        resp.status(405).send("Unauthorised")
+        return
+    }
+    let username=tokenPayload.username
+    let userToFind = findUser(username)
+    if(userToFind="User Not Found"){
+        resp.status(404).send("User Not Found")
+        return
+    }
+    let tests = gettests(userToFind.stack,allTest)
+    resp.status(201).send(tests)
+
+})
 app.listen(8888, () => {
     console.log("Backend service running at 8888")
 });
+
+function gettests(stack, alltest) {
+    let frontend = stack.frontend
+    let backend = stack.backend
+    let db = stack.db
+    let temptest = []
+    for (let index = 0; index < alltest.length; index++) {
+        if (alltest[index].tech == frontend || alltest[index].tech == backend || alltest[index].tech == db) {
+            temptest.push(alltest[index])
+        }
+
+    }
+    return temptest
+}
+
+function findUser(username){
+    for (let index = 0; index < allUsers.length; index++) {
+        if (allUsers[index].username==username){
+            return allUsers[index]
+        }
+        
+    }
+    return "User Not Found"
+}

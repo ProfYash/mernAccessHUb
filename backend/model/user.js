@@ -1,6 +1,6 @@
 const uuid = require('uuid')
 class User {
-    constructor(fullName, role, stack, experiance, country, credentials) {
+    constructor(fullName, role, stack, experiance, country, credentials,tests) {
         this.id = uuid.v4()
         this.credentials = credentials
         let tempName = fullName.split(" ")
@@ -10,6 +10,7 @@ class User {
         this.exprieance = experiance
         this.stack = stack
         this.country = country
+        this.tests=tests
        
     }
     sendUserDetails() {

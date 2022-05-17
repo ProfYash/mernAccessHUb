@@ -11,7 +11,7 @@ function Test() {
     const [loginStatus, updateloginStatus] = useState("")
     const loadTest = async (e) => {
 
-        let resp = await axios.get("http://localhost:8888/api/v1/getTests",{user}).catch(e => {
+        let resp = await axios.get("http://localhost:8888/api/v1/getTests").catch(e => {
             console.log(e.message)
             if (e.response.status == 401) {
                 updateloginStatus("Unauthorized")

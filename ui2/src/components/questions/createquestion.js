@@ -12,13 +12,13 @@ function CreateQuestion() {
 
     const [type, updateType] = useState("MCQ")
     const [tech, updateTech] = useState("Node")
-    const [details, updateDetails] = useState("React is a ?")
+    const [details, updateDetails] = useState("Node is a ?")
     const [options, updateOptions] = useState([])
     const [option1, updateOption1] = useState("Front End Tech")
     const [option2, updateOption2] = useState("Backend End Tech")
     const [option3, updateOption3] = useState("Both")
     const [option4, updateOption4] = useState("None")
-    const [correctAnswer, updateCorrectAnswer] = useState("A")
+    const [correctAnswer, updateCorrectAnswer] = useState("B")
     const [complexity, updateComplexity] = useState(5)
     const [loginStatus, updateloginStatus] = useState("")
     const handleMySubmit = async (e) => {
