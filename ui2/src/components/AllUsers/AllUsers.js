@@ -44,6 +44,9 @@ function AllUsers() {
                         Frontend:&nbsp;{u.stack.frontend}<br />
                         Backend:&nbsp;{u.stack.backend}<br />
                         DataBase:&nbsp;{u.stack.db}<br />
+                        Score:&nbsp;{u.score}<br />
+                        Out off Score:&nbsp;{u.outoffscore}<br />
+                    
 
                     </div>
                 </div>)

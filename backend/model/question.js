@@ -6,6 +6,7 @@ class Question {
         this.tech = tech
         this.details = details
         this.options = options
+        this.selectedAnswer = ""
         this.correctAnswer = correctAnswer
         this.complexity = complexity
         if (this.complexity > 6) {

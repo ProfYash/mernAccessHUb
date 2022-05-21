@@ -7,7 +7,7 @@ import Navigation from "../navigation/navigation";
 import img from '../../logoswabhav.png'
 
 function Login() {
-    const [username, updateUsername] = useState("yash123")
+    const [username, updateUsername] = useState("kanan123")
     const [password, updatePassword] = useState("hi")
     const [loginStatus, updateloginStatus] = useState("")
     const navigate = new useNavigate()

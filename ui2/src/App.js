@@ -9,6 +9,7 @@ import AllQuestions from './components/questions/allquestions.js';
 import CreateUser from './components/AllUsers/CreateUser.js';
 import CreateQuestion from './components/questions/createquestion.js';
 import Test from './components/test/Test.js';
+import StartTest from './components/test/starttest.js';
 function App() {
   return (
     <div>
@@ -22,6 +23,7 @@ function App() {
         <Route exact path='/CreateUser/:username' element={<CreateUser />} />
         <Route exact path='/CreateQuestion/:username' element={<CreateQuestion />} />
         <Route exact path='/Test/:username' element={<Test />} />
+        <Route exact path='/Start/:username/:testid' element={<StartTest />} />
       </Routes>
 
     </div>
