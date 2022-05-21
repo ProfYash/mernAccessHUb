@@ -39,10 +39,8 @@ function Test() {
                         Test Tech: &nbsp; {u.tech}
                     </div>
                     <div className="card-body" key={u.testid}>
-                        {u.outoffscore}
+                        Your Current Score:&nbsp;{u.score}<br /><br />
                         <button className="btn btn-primary" style={{ backgroundColor: "orange" }} onClick={() => navigate(`/Start/${user}/${u.testid}`)}>Start Test</button>
-
-
                     </div>
                 </div>)
         })

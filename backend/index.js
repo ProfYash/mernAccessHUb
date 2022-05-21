@@ -164,19 +164,16 @@ app.post('/api/v1/getQuestions', async (req, resp) => {
         resp.status(405).send("Unauthorised")
         return
     }
-
     const testid = req.body.testid
-    // console.log(testid)
     let username = tokenPayload.username
-    // console.log(username)
     let index = findUser(tokenPayload.username)
-
-    // console.log(userToFind)
-
-    let questions = findquestion(AllUsers[index], testid)
-    // console.log("*****************from api")
-    // console.log(questions)
-    resp.status(201).send(questions)
+    let indexOftest = findquestion(AllUsers[index], testid)
+    if (indexOftest == "Already Attempted") {
+        resp.status(504).send(indexOftest)
+        return
+    }
+    AllUsers[index].tests[indexOftest].attempt=true
+    resp.status(201).send(AllUsers[index].tests[indexOftest].questions)
 })
 app.post('/api/v1/submitTest', async (req, resp) => {
     let tokenPayload = JWTToken.isValidateToken(req, resp, req.cookies["token"])
@@ -187,8 +184,11 @@ app.post('/api/v1/submitTest', async (req, resp) => {
     let questions = req.body
     let index = findUser(tokenPayload.username)
     AllUsers[index].updateScore(questions)
+
     console.log(AllUsers[index])
     resp.status(201).send(AllUsers[index])
+
+
 
 })
 app.listen(8888, () => {
@@ -249,24 +249,22 @@ function findUser(username) {
 
 function findquestion(user, testid) {
     let flag = false
+    let attempt = false
     let tests = user.tests
-    // console.log(tests.length)
     let index = 0
     for (let i = 0; i < tests.length; i++) {
-        // console.log(tests[i].testid)
         if (tests[i].testid == testid) {
+            attempt = tests[i].attempt
             flag = true
             index = i
             break
         }
     }
-    // console.log(flag)
-    if (flag) {
-        // console.log("*****************from function")
-        // console.log(tests[index].questions)
-        return tests[index].questions
+    if (flag && !attempt) {
+        // return tests[index].questions
+        return index
     } else {
-        return "Invalid Testid"
+        return "Already Attempted"
     }
 
 

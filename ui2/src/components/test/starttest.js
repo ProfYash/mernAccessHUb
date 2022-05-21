@@ -9,12 +9,13 @@ function StartTest() {
     const username = useParams().username
     const testid = useParams().testid
     const [loginStatus, updateloginStatus] = useState("")
+    const [attemptStatus, updateattemptStatus] = useState("")
     const [questions, updateallquestions] = useState([])
     const [currentquestion, updatecurrentquestion] = useState()
     let correctAnswerNew = []
     const handleMySubmit = async (e) => {
         e.preventDefault();
-       let resp= await axios.post("http://localhost:8888/api/v1/submitTest", { questions }).catch(e => {
+        let resp = await axios.post("http://localhost:8888/api/v1/submitTest", { questions }).catch(e => {
 
             if (e.response.status == 401) {
                 updateloginStatus("Unauthorized")
@@ -37,10 +38,11 @@ function StartTest() {
                 updateloginStatus("Unauthorized")
                 return
             }
-            else if (e.response.status == 405) {
-                updateloginStatus("UserAlreadyExist")
+            else if (e.response.status == 504) {
+                updateattemptStatus("Already Attempted")
                 return
             }
+
 
         })
         if (resp.data != null) {
@@ -93,6 +95,26 @@ function StartTest() {
             <div className="d-flex felx-row flex-wrap justify-content-between">
                 <h1>
                     <a href="/">Login Again From here</a></h1>
+            </div>
+        )
+    }
+    if (attemptStatus == "Already Attempted") {
+        return (
+            <div>
+                <div >
+                    <Navigation username={username} role={"user"} />
+                </div>
+                <div>
+                    <div className="card" style={{ width: "50%", marginBottom: "50px" }}>
+                        <div className="card-header" style={{ backgroundColor: "orange" }}>
+                            You have Already Attemted Test
+                        </div>
+                        <div className="card-body">
+
+                            <button className="btn btn-primary" style={{ backgroundColor: "orange" }} onClick={() => navigate(`/Test/${username}`)}>Go Back to Test</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     }
