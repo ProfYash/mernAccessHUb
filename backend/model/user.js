@@ -35,7 +35,7 @@ class User {
             let questionId = q[0].id
             let testIndex = -100
             for (let i = 0; i < this.tests.length; i++) {
-                for (let j = 0; j < this.tests[i].questions .length; j++) {
+                for (let j = 0; j < this.tests[i].questions.length; j++) {
                     if (questionId == this.tests[i].questions[j].id) {
                         testIndex = i
                         break
@@ -53,10 +53,10 @@ class User {
             for (let index = 0; index < q.length; index++) {
                 if (q[index].correctAnswer == q[index].selectedAnswer) {
                     this.score = this.score + q[index].totalMark
-                    this.tests[testIndex].score=this.tests[testIndex].score+q[index].totalMark
+                    this.tests[testIndex].score = this.tests[testIndex].score + q[index].totalMark
                 } else {
                     this.score = this.score - q[index].negMark
-                    this.tests[testIndex].score=this.tests[testIndex].score - q[index].negMark
+                    this.tests[testIndex].score = this.tests[testIndex].score - q[index].negMark
                 }
 
             }
@@ -66,6 +66,7 @@ class User {
 const bcrypt = require('bcrypt')
 class Credentials {
     constructor(username, password) {
+        this.id=uuid.v4()
         this.username = username
         this.password = password
     }
@@ -76,7 +77,7 @@ class Credentials {
 }
 class Stack {
     constructor(frontend, backend, db) {
-
+        this.id = uuid.v4()
         this.frontend = frontend
         this.backend = backend
         this.db = db

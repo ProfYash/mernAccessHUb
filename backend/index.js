@@ -2,6 +2,7 @@ const JWTToken = require('./middleware/authentication.js')
 const { User, Credentials, Stack, AllUsers, AllQuestions, AllTest, gettests } = require('./model/user.js')
 const { Question, nounsBasedonCountry } = require('./model/question.js')
 const { Test } = require('./model/test.js')
+const { MyDataBase } = require('./repository/database.js')
 const cookieParser = require('cookie-parser')
 const express = require('express')
 const cors = require('cors')
@@ -17,8 +18,9 @@ app.use(cookieParser())
 app.post('/api/v1/createuser', async (req, resp) => {
     console.log(JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid)
     if (JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid) {
-       
 
+        let mydb = new MyDataBase()
+        mydb.connectDatabase()
 
 
         let usernameExists = false
@@ -49,6 +51,7 @@ app.post('/api/v1/createuser', async (req, resp) => {
             let newUser = new User(fullName, role, stackofNewUser, exprieance, country, credentials, tests)
             AllUsers.push(newUser)
             // console.log("iUserCreated", newUser)
+            mydb.createNewUser(newUser)
             resp.status(200).send(newUser)
         }
     } else {
@@ -57,10 +60,16 @@ app.post('/api/v1/createuser', async (req, resp) => {
     }
 
 })
-app.get('/api/v1/getAllUsers', (req, resp) => {
+app.get('/api/v1/getAllUsers', async (req, resp) => {
 
     console.log(JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid)
     if (JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid) {
+        let mydb = new MyDataBase()
+        mydb.connectDatabase()
+        let allusersfromdb, allquestionsfromdb, allstacksfromdb
+        let alldata = await mydb.fetchAllUsers()
+        console.log(alldata[0])
+        console.log(AllUsers)
         resp.status(200).send(AllUsers)
         // console.log("AllUsers sent")
     } else {
@@ -132,7 +141,7 @@ app.post('/api/v1/login', async (req, resp) => {
     }
 
 })
-app.get('/api/auth/logout', (req,resp)=>{
+app.get('/api/auth/logout', (req, resp) => {
     // console.log("logout")
     let tokenPayload = JWTToken.isValidateToken(req, resp, req.cookies["token"])
     resp.cookie('token', 'none', {
@@ -184,7 +193,7 @@ app.post('/api/v1/getQuestions', async (req, resp) => {
         resp.status(504).send(indexOftest)
         return
     }
-    AllUsers[index].tests[indexOftest].attempt=true
+    AllUsers[index].tests[indexOftest].attempt = true
     resp.status(201).send(AllUsers[index].tests[indexOftest].questions)
 })
 app.post('/api/v1/submitTest', async (req, resp) => {
