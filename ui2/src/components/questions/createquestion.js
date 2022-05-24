@@ -6,10 +6,10 @@ import '../login/login.css'
 import img from '../../logoswabhav.png'
 import Navigation from '../navigation/navigation.js'
 function CreateQuestion() {
-     
+
     const roleofadmin = "admin"
     const usernameofadmin = useParams().username
-
+    let navigate = useNavigate()
     const [type, updateType] = useState("MCQ")
     const [tech, updateTech] = useState("Node")
     const [details, updateDetails] = useState("Node is a ?")
@@ -23,10 +23,10 @@ function CreateQuestion() {
     const [loginStatus, updateloginStatus] = useState("")
     const handleMySubmit = async (e) => {
         if (type != "" && tech != "") {
-            options.push(option1,option2,option3,option4)
+            options.push(option1, option2, option3, option4)
             e.preventDefault();
             console.log(options)
-            let resp = await axios.post("http://localhost:8888/api/v1/createquestion", { type, tech, details, options, correctAnswer, complexity}).catch(e => {
+            let resp = await axios.post("http://localhost:8888/api/v1/createquestion", { type, tech, details, options, correctAnswer, complexity }).catch(e => {
                 console.log(e.message)
                 if (e.response.status == 401) {
                     updateloginStatus("Unauthorized")
@@ -38,7 +38,17 @@ function CreateQuestion() {
                 }
                 updateloginStatus("User Created")
             })
-            updateOptions([])
+            if (resp.data != "Unauthorised") {
+                updateloginStatus("Question Created")
+                updateOptions([])
+                alert("User Created!")
+                return
+            } else {
+                updateloginStatus("Unauthorised")
+                navigate("/")
+                return
+            }
+
 
         }
     }
@@ -85,8 +95,8 @@ function CreateQuestion() {
                                     <label className="form-group"><b>complexity:</b></label>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <input type="text" value={complexity} onChange={(e) => updateComplexity(e.target.value)} className="form-control" /><br />
                                     <label for="customRange3"><b>complexity:</b></label>&nbsp;&nbsp;&nbsp;
-                                    <input type="range" value={complexity} onChange={(e) => updateComplexity(e.target.value)}  class="custom-range" style={{Color: "orange" }} min="0" max="10" step="1" id="customRange3"></input><br /><br />
-                                    
+                                    <input type="range" value={complexity} onChange={(e) => updateComplexity(e.target.value)} class="custom-range" style={{ Color: "orange" }} min="0" max="10" step="1" id="customRange3"></input><br /><br />
+
                                     <button className="btn btn-primary" style={{ backgroundColor: "orange" }}>Submit</button><br /><br />
                                     <label className="form-group"><b>{loginStatus}</b></label>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </form>

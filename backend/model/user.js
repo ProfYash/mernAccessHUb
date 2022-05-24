@@ -35,7 +35,7 @@ class User {
             let questionId = q[0].id
             let testIndex = -100
             for (let i = 0; i < this.tests.length; i++) {
-                for (let j = 0; j < this.tests[i].questions.length; j++) {
+                for (let j = 0; j < this.tests[i].questions .length; j++) {
                     if (questionId == this.tests[i].questions[j].id) {
                         testIndex = i
                         break

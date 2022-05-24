@@ -8,7 +8,7 @@ import Navigation from '../navigation/navigation.js'
 function CreateUser() {
     const roleofadmin = "admin"
     const usernameofadmin = useParams().username
-
+let navigate=useNavigate()
     const [username, updateUsername] = useState("kanan")
     const [password, updatePassword] = useState("hi")
     const [fullname, updateFullName] = useState("kanan s")
@@ -34,8 +34,16 @@ function CreateUser() {
                 }
                 
             })
-            updateloginStatus("User Created")
-            alert("User Created!")
+            if(resp.data!="Unauthorised"){
+                updateloginStatus("User Created")
+                alert("User Created!")
+                return
+            }else{
+                updateloginStatus("Unauthorised")
+                navigate("/")
+                return
+            }
+                
         }
     }
 

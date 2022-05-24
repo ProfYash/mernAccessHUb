@@ -15,12 +15,12 @@ app.use(cookieParser())
 
 
 app.post('/api/v1/createuser', async (req, resp) => {
-    // console.log("inside Create User")
-    if (!JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid) {
-        // console.log("Unauthorised")
-        resp.status(401).send("Unauthorised")
+    console.log(JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid)
+    if (JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid) {
+       
 
-    } else {
+
+
         let usernameExists = false
         const fullName = req.body.fullname;
         const role = req.body.role;
@@ -51,13 +51,16 @@ app.post('/api/v1/createuser', async (req, resp) => {
             // console.log("iUserCreated", newUser)
             resp.status(200).send(newUser)
         }
+    } else {
+        // console.log("Unauthorised")
+        resp.status(401).send("Unauthorised")
     }
 
 })
 app.get('/api/v1/getAllUsers', (req, resp) => {
 
+    console.log(JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid)
     if (JWTToken.isValidateToken(req, resp, req.cookies["token"]).isValid) {
-        // console.log("here")
         resp.status(200).send(AllUsers)
         // console.log("AllUsers sent")
     } else {
@@ -67,7 +70,7 @@ app.get('/api/v1/getAllUsers', (req, resp) => {
 })
 app.post('/api/v1/createquestion', async (req, resp) => {
     if (JWTToken.isValidateToken(req, resp, req.cookies["token"]).role != "admin") {
-        resp.status(405).send("Unauthorised")
+        resp.status(401).send("Unauthorised")
         return
     }
     const type = req.body.type
@@ -128,6 +131,15 @@ app.post('/api/v1/login', async (req, resp) => {
         // console.log("Login done")
     }
 
+})
+app.get('/api/auth/logout', (req,resp)=>{
+    // console.log("logout")
+    let tokenPayload = JWTToken.isValidateToken(req, resp, req.cookies["token"])
+    resp.cookie('token', 'none', {
+        expires: new Date(Date.now() + 0 * 1000),
+        httpOnly: true,
+    })
+    resp.status(200).send({ success: true, message: 'User logged out successfully' })
 })
 app.get('/api/v1/fetchquestion/:username', (req, resp) => {
     const username = req.params.username
@@ -194,7 +206,7 @@ app.post('/api/v1/submitTest', async (req, resp) => {
 app.listen(8888, () => {
     const questions = [new Question("MCQ", "React", "React is a ?", ["FrontEnd Tech", "Backend Tech", "DB Tech", "None"], "FrontEnd Tech", 6),
     new Question("MCQ", "Node", "Node is a ?", ["FrontEnd Tech", "Backend Tech", "DB Tech", "None"], "Backend Tech", 4),
-    new Question("MCQ", "Mongo", "Mongo is a ?", ["FrontEnd Tech", "Backend Tech", "DB Tech", "None"], "v", 7), new Question("MCQ", "Node", "2212112Node is a ?", ["FrontEnd Tech", "Backend Tech", "DB Tech", "None"], "Backend Tech", 4)]
+    new Question("MCQ", "Mongo", "Mongo is a ?", ["FrontEnd Tech", "Backend Tech", "DB Tech", "None"], "DB Tech", 7), new Question("MCQ", "Node", "2212112Node is a ?", ["FrontEnd Tech", "Backend Tech", "DB Tech", "None"], "Backend Tech", 4)]
     const test = [new Test("React"), new Test("Node"), new Test("Mongo")]
     for (let index = 0; index < test.length; index++) {
         AllTest.push(test[index])

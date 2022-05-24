@@ -21,6 +21,7 @@ class JWTToken {
         }
         return jwt.verify(token, secretkey)
     }
+   
     
 }
 module.exports = JWTToken
