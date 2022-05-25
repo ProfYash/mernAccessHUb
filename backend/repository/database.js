@@ -1,4 +1,5 @@
 const Pool = require('pg').Pool
+const sequelize = require('sequelize')
 const pool = new Pool(
     {
         user: "postgres",
@@ -8,17 +9,7 @@ const pool = new Pool(
         port: "5432"
     }
 );
-// let user ={
-//     id:"123",
-//     fname:"xyz",
-//     lname:"abc",
-//     role:"user",
-//     exprieance:"555",
-//     country:"australia"
-// }
-// pool.connect()
 
-// let newQuery = pool.query(`INSERT INTO users (id,credentialsid,fname,lname,role,exprieance,stackid,country) VALUES(${user.id}, ${"1"}, ${user.fname}, ${user.lname}, ${user.role}, ${user.exprieance}, ${"2"},${user.country}) RETURNING *`)
 class MyDataBase {
     constructor() {
         this.pool = pool
@@ -63,9 +54,6 @@ class MyDataBase {
             let QueryForUserCreate = await this.pool.query("SELECT * FROM users")
             let QueryForCredentialCreate = await this.pool.query("SELECT * FROM credentials")
             let QueryForStackCreate = await this.pool.query("SELECT * FROM stack")
-            // console.log(QueryForUserCreate.rows)
-            // console.log(QueryForStackCreate)
-            // console.log(QueryForCredentialCreate)
             return [QueryForUserCreate.rows,QueryForCredentialCreate.rows,QueryForStackCreate.rows]
         }
         catch (err) {

@@ -71,8 +71,7 @@ app.get('/api/v1/getAllUsers', async (req, resp) => {
         console.log(alldata[0])
         console.log(AllUsers)
         resp.status(200).send(AllUsers)
-        // console.log("AllUsers sent")
-    } else {
+         } else {
         resp.status(401).send("Unauthorised")
     }
 
