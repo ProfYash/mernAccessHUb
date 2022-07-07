@@ -68,8 +68,8 @@ app.get('/api/v1/getAllUsers', async (req, resp) => {
         mydb.connectDatabase()
         let allusersfromdb, allquestionsfromdb, allstacksfromdb
         let alldata = await mydb.fetchAllUsers()
-        console.log(alldata[0])
-        console.log(AllUsers)
+        // console.log(alldata[0])
+        // console.log(AllUsers)
         resp.status(200).send(AllUsers)
          } else {
         resp.status(401).send("Unauthorised")
@@ -233,7 +233,10 @@ app.listen(8888, () => {
     const userCred = new Credentials("kanan123", "$2b$10$wc.wxLlpEpciU0JB9QSh.uJmf7GLIxi/fM7ruPHRX6NsvlypKNQEO")
     const adminUser = new User("Yash Shah", "admin", adminStack, 10, "India", adminCred)
     const newuser = new User("Kanan", "user", adminStack, 10, "India", userCred)
-
+    // let mydb = new MyDataBase()
+    // mydb.connectDatabase()
+    // mydb.createNewUser(adminUser)
+    // mydb.createNewUser(newuser)
     AllUsers.push(adminUser, newuser)
     // console.log("AllQuestions****************************************")
     // console.log(AllQuestions)
